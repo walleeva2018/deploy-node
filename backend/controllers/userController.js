@@ -1,7 +1,6 @@
 const User = require("../models/User");
 
 const userController = {
-  // Get all users
   getAllUsers: async (req, res) => {
     try {
       const users = await User.find().select("-password").sort({ createdAt: -1 });
@@ -18,7 +17,6 @@ const userController = {
     }
   },
 
-  // Create user (legacy)
   createUser: async (req, res) => {
     try {
       const { name, email } = req.body;
@@ -36,12 +34,10 @@ const userController = {
     }
   },
 
-  // Sign up
   signup: async (req, res) => {
     try {
       const { username, email, password } = req.body;
 
-      // Basic validation
       if (!username || !email || !password) {
         return res.status(400).json({
           message: "Missing required fields",
@@ -49,7 +45,6 @@ const userController = {
         });
       }
 
-      // Check if user already exists
       const existingUser = await User.findOne({
         $or: [{ email: email }, { username: username }],
       });
@@ -61,16 +56,16 @@ const userController = {
         });
       }
 
-      // Create new user
+ 
       const user = new User({
         username: username.trim(),
         email: email.trim().toLowerCase(),
-        password: password, // Note: In production, you should hash this password!
+        password: password, 
       });
 
       await user.save();
 
-      // Return user data without password
+     
       const userResponse = {
         id: user._id,
         username: user.username,
@@ -83,7 +78,7 @@ const userController = {
         user: userResponse,
       });
     } catch (error) {
-      // Handle duplicate key errors
+     
       if (error.code === 11000) {
         const field = Object.keys(error.keyPattern)[0];
         return res.status(409).json({
@@ -99,12 +94,12 @@ const userController = {
     }
   },
 
-  // Sign in
+
   signin: async (req, res) => {
     try {
       const { username, password } = req.body;
 
-      // Basic validation
+      
       if (!username || !password) {
         return res.status(400).json({
           message: "Missing required fields",
@@ -112,7 +107,7 @@ const userController = {
         });
       }
 
-      // Find user by username or email
+      
       const user = await User.findOne({
         $or: [
           { username: username.trim() },
@@ -127,7 +122,7 @@ const userController = {
         });
       }
 
-      // Verify password (in production, you would compare hashed passwords)
+      
       if (user.password !== password) {
         return res.status(401).json({
           message: "Authentication failed",
@@ -135,7 +130,7 @@ const userController = {
         });
       }
 
-      // Return user data without password
+      
       const userResponse = {
         id: user._id,
         username: user.username,
@@ -155,7 +150,6 @@ const userController = {
     }
   },
 
-  // Home page
   getHome: async (req, res) => {
     try {
       const recentUsers = await User.find()
@@ -185,7 +179,6 @@ const userController = {
     }
   },
 
-  // Welcome message
   getWelcome: async (req, res) => {
     try {
       const userCount = await User.countDocuments();

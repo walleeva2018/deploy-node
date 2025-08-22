@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  name: String, // Keep the old name field for backward compatibility
+  name: String, 
   createdAt: { type: Date, default: Date.now },
 });
 

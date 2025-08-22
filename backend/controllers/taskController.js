@@ -31,7 +31,6 @@ const taskSchema = new mongoose.Schema({
   },
 });
 
-// Update the updatedAt field before saving
 taskSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();
@@ -39,14 +38,14 @@ taskSchema.pre("save", function (next) {
 
 const Task = mongoose.model("Task", taskSchema);
 
-// Task CRUD Operations
+
 const taskController = {
-  // CREATE - Add a new task
+
   createTask: async (req, res) => {
     try {
       const { title, description, userId } = req.body;
 
-      // Validation
+
       if (!title || !userId) {
         return res.status(400).json({
           message: "Missing required fields",
@@ -54,7 +53,7 @@ const taskController = {
         });
       }
 
-      // Create new task
+
       const task = new Task({
         title: title.trim(),
         description: description ? description.trim() : "",
@@ -75,12 +74,12 @@ const taskController = {
     }
   },
 
-  // READ - Get all tasks (with optional user filter)
+
   getTasks: async (req, res) => {
     try {
       const { userId, completed } = req.query;
 
-      // Build filter object
+
       let filter = {};
       if (userId) filter.userId = userId;
       if (completed !== undefined) filter.completed = completed === "true";
@@ -102,7 +101,7 @@ const taskController = {
     }
   },
 
-  // READ - Get a single task by ID
+
   getTaskById: async (req, res) => {
     try {
       const { id } = req.params;
@@ -135,13 +134,11 @@ const taskController = {
     }
   },
 
-  // UPDATE - Update a task by ID
   updateTask: async (req, res) => {
     try {
       const { id } = req.params;
       const { title, description, completed } = req.body;
 
-      // Build update object
       const updateData = {};
       if (title !== undefined) updateData.title = title.trim();
       if (description !== undefined)
@@ -180,7 +177,6 @@ const taskController = {
     }
   },
 
-  // DELETE - Delete a task by ID
   deleteTask: async (req, res) => {
     try {
       const { id } = req.params;
@@ -213,7 +209,6 @@ const taskController = {
     }
   },
 
-  // UTILITY - Get user's task statistics
   getTaskStats: async (req, res) => {
     try {
       const { userId } = req.params;
