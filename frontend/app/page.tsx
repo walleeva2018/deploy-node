@@ -24,7 +24,7 @@ interface UsersResponse {
   users: ApiUser[];
 }
 
-const API_BASE_URL = "https://deploy-node-omega.vercel.app/"; // Your API URL
+const API_BASE_URL = "https://deploy-node-omega.vercel.app"; // Your API URL
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
