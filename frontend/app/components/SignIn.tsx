@@ -43,31 +43,31 @@ export default function SignIn({ onSignInSuccess, apiBaseUrl }: SignInProps) {
     setError("");
 
     try {
-      // For demo purposes, we'll simulate login by checking if user exists
-      // In a real app, you'd have a proper login endpoint
-      const response = await fetch(`${apiBaseUrl}/users`);
-      const data: UsersResponse = await response.json();
+      console.log('inside it')
+      const response = await fetch(`${apiBaseUrl}/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
 
       if (response.ok) {
-        const existingUser = data.users.find(
-          (u: ApiUser) =>
-            u.username === formData.username || u.email === formData.username
-        );
-
-        if (existingUser) {
-          const userData = {
-            id: existingUser._id,
-            username: existingUser.username,
-            email: existingUser.email,
-          };
-          localStorage.setItem("user", JSON.stringify(userData));
-          onSignInSuccess(userData);
-          setFormData({ username: "", password: "" });
-        } else {
-          setError("User not found. Please sign up first.");
-        }
+        const userData = {
+          id: data.user.id,
+          username: data.user.username,
+          email: data.user.email,
+        };
+        localStorage.setItem("user", JSON.stringify(userData));
+        onSignInSuccess(userData);
+        setFormData({ username: "", password: "" });
       } else {
-        setError("Login failed");
+        setError(data.error || "Login failed");
       }
     } catch {
       setError("Network error. Please check if the API server is running.");
@@ -81,7 +81,7 @@ export default function SignIn({ onSignInSuccess, apiBaseUrl }: SignInProps) {
       <div>
         <label
           htmlFor="signin-username"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-black mb-2"
         >
           Username or Email
         </label>
@@ -100,7 +100,7 @@ export default function SignIn({ onSignInSuccess, apiBaseUrl }: SignInProps) {
       <div>
         <label
           htmlFor="signin-password"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-black mb-2"
         >
           Password
         </label>

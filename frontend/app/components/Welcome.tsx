@@ -61,30 +61,6 @@ export default function Welcome({ user, onLogout, apiBaseUrl }: WelcomeProps) {
             📝 Manage Tasks
           </button>
 
-          {/* API Testing Buttons */}
-          <div className="border-t pt-3">
-            <p className="text-sm text-gray-600 mb-3 text-center">
-              Quick API Tests:
-            </p>
-
-            <button
-              onClick={() =>
-                window.open(`${apiBaseUrl}/tasks?userId=${user.id}`, "_blank")
-              }
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors font-medium mb-2"
-            >
-              View My Tasks (API)
-            </button>
-
-            <button
-              onClick={() =>
-                window.open(`${apiBaseUrl}/tasks/stats/${user.id}`, "_blank")
-              }
-              className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors font-medium mb-2"
-            >
-              View Task Stats (API)
-            </button>
-          </div>
 
           {/* Logout Button */}
           <div className="border-t pt-3">

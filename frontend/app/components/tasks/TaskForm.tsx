@@ -78,7 +78,7 @@ export default function TaskForm({
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">
+      <h2 className="text-xl font-semibold text-black mb-4">
         Create New Task
       </h2>
 
@@ -86,7 +86,7 @@ export default function TaskForm({
         <div>
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-black mb-2"
           >
             Title *
           </label>
@@ -105,7 +105,7 @@ export default function TaskForm({
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-black mb-2"
           >
             Description
           </label>

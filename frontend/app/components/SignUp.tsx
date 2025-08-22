@@ -64,7 +64,7 @@ export default function SignUp({ onSignUpSuccess, apiBaseUrl }: SignUpProps) {
       <div>
         <label
           htmlFor="signup-username"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-black mb-2"
         >
           Username
         </label>
@@ -83,7 +83,7 @@ export default function SignUp({ onSignUpSuccess, apiBaseUrl }: SignUpProps) {
       <div>
         <label
           htmlFor="signup-email"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-black mb-2"
         >
           Email
         </label>
@@ -102,7 +102,7 @@ export default function SignUp({ onSignUpSuccess, apiBaseUrl }: SignUpProps) {
       <div>
         <label
           htmlFor="signup-password"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-black mb-2"
         >
           Password
         </label>
