@@ -41,7 +41,6 @@ export default function TasksPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Check authentication
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (!savedUser) {
@@ -58,7 +57,6 @@ export default function TasksPage() {
     }
   }, [router]);
 
-  // Fetch tasks and stats
   useEffect(() => {
     if (user) {
       fetchTasks();
@@ -114,7 +112,6 @@ export default function TasksPage() {
       prev.map((task) => (task._id === updatedTask._id ? updatedTask : task))
     );
 
-    // Recalculate stats
     const newTasks = tasks.map((task) =>
       task._id === updatedTask._id ? updatedTask : task
     );
@@ -159,13 +156,13 @@ export default function TasksPage() {
   }
 
   if (!user) {
-    return null; // Will redirect to home
+    return null; 
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
+       
         <div className="bg-white p-6 rounded-lg shadow-md mb-6">
           <div className="flex items-center justify-between">
             <div>
@@ -189,21 +186,21 @@ export default function TasksPage() {
           </div>
         </div>
 
-        {/* Error Message */}
+      
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md mb-6">
             {error}
           </div>
         )}
 
-        {/* Task Form */}
+       
         <TaskForm
           onTaskCreated={handleTaskCreated}
           apiBaseUrl={API_BASE_URL}
           userId={user.id}
         />
 
-        {/* Task List */}
+       
         <TaskList
           tasks={tasks}
           onTaskUpdated={handleTaskUpdated}

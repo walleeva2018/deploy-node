@@ -79,7 +79,6 @@ export default function TaskList({
 
   return (
     <div className="space-y-6">
-      {/* Task Statistics */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">
           Task Overview
@@ -120,7 +119,6 @@ export default function TaskList({
         )}
       </div>
 
-      {/* Filter Buttons */}
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex gap-2 justify-center">
           <button
@@ -144,7 +142,6 @@ export default function TaskList({
         </div>
       </div>
 
-      {/* Task Items */}
       <div className="space-y-4">
         {filteredTasks.length === 0 ? (
           <div className="bg-white p-6 rounded-lg shadow-md text-center">

@@ -6,15 +6,6 @@ interface User {
   email: string;
 }
 
-interface ApiUser {
-  _id: string;
-  username: string;
-  email: string;
-}
-
-interface UsersResponse {
-  users: ApiUser[];
-}
 
 interface SignInProps {
   onSignInSuccess: (user: User) => void;

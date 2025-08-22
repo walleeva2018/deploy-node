@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Management App - Frontend
 
-## Getting Started
+A simple task management web app built with **Next.js** in **3 hours**. This is just the frontend - you need to run the backend server separately.
 
-First, run the development server:
+## What it does
 
+- Sign up / Sign in with username and password
+- Create, edit, and delete tasks
+- Mark tasks as complete
+- Clean, responsive interface
+
+## Quick Start
+
+1. **Install dependencies:**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Start the development server:**
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Open [http://localhost:3001](http://localhost:3001)**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Important Notes
 
-## Learn More
+- **Frontend only** - Make sure your backend API is running on `http://localhost:3000`
+- **API Base URL** - Update the API_BASE_URL in components if your backend runs elsewhere
+- **No database** - This connects to your separate Express.js backend
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/
+├── components/
+│   ├── tasks/
+│   │   └── AuthTabs.tsx
+│   ├── SignIn.tsx
+│   ├── SignUp.tsx
+│   └── Welcome.tsx
+├── tasks/
+│   └── page.tsx
+├── layout.tsx
+└── page.tsx
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tech Stack
 
-## Deploy on Vercel
+- **Next.js** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Local Storage** - Session management
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Backend Required
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This frontend needs the Express.js backend running. The backend handles:
+- User authentication
+- Task CRUD operations
+- MongoDB database
+
+---
+
+**Built in 3 hours as a full-stack learning project.**

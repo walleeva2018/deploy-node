@@ -24,10 +24,9 @@ export default function AuthTabs({ onAuthSuccess, apiBaseUrl }: AuthTabsProps) {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
         <h1 className="text-2xl font-bold text-center text-gray-900 mb-8">
-          Welcome to Auth App
+          Welcome to Task App
         </h1>
 
-        {/* Tab Navigation */}
         <div className="mb-6">
           <div className="flex rounded-lg bg-gray-100 p-1">
             <button
@@ -53,14 +52,12 @@ export default function AuthTabs({ onAuthSuccess, apiBaseUrl }: AuthTabsProps) {
           </div>
         </div>
 
-        {/* Tab Content */}
         {activeTab === "signin" ? (
           <SignIn onSignInSuccess={onAuthSuccess} apiBaseUrl={apiBaseUrl} />
         ) : (
           <SignUp onSignUpSuccess={onAuthSuccess} apiBaseUrl={apiBaseUrl} />
         )}
 
-        {/* Footer */}
         <div className="mt-6 text-center text-sm text-gray-500">
           {activeTab === "signin"
             ? "Don't have an account? Click Sign Up above"

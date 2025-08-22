@@ -16,7 +16,6 @@ export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Check if user is already logged in
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -38,7 +37,6 @@ export default function Home() {
     setUser(null);
   };
 
-  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -47,7 +45,6 @@ export default function Home() {
     );
   }
 
-  // Show appropriate component based on authentication state
   return user ? (
     <Welcome user={user} onLogout={handleLogout} apiBaseUrl={API_BASE_URL} />
   ) : (

@@ -151,7 +151,6 @@ export default function TaskItem({
       }`}
     >
       {isEditing ? (
-        // Edit Mode
         <div className="space-y-3">
           <input
             type="text"
@@ -184,7 +183,6 @@ export default function TaskItem({
           </div>
         </div>
       ) : (
-        // View Mode
         <div>
           <div className="flex items-start justify-between mb-2">
             <h3
