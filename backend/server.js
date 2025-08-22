@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+// Import task controller
+const { taskController } = require("./task");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -68,7 +71,8 @@ const User = mongoose.model("User", {
   createdAt: { type: Date, default: Date.now },
 });
 
-// Routes
+// =================== USER ROUTES ===================
+
 app.get("/", async (req, res) => {
   try {
     const userCount = await User.countDocuments();
@@ -78,6 +82,21 @@ app.get("/", async (req, res) => {
       database: "Connected to MongoDB",
       totalUsers: userCount,
       timestamp: new Date().toISOString(),
+      endpoints: {
+        users: [
+          "GET /users - Get all users",
+          "POST /signup - Create user",
+          "POST /users - Create user (legacy)",
+        ],
+        tasks: [
+          "GET /tasks - Get all tasks",
+          "POST /tasks - Create task",
+          "GET /tasks/:id - Get task by ID",
+          "PUT /tasks/:id - Update task",
+          "DELETE /tasks/:id - Delete task",
+          "GET /tasks/stats/:userId - Get user task stats",
+        ],
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -106,6 +125,7 @@ app.get("/home", async (req, res) => {
         "Express.js Framework",
         "RESTful API",
         "User Authentication",
+        "Task Management CRUD",
         "Vercel Deployment Ready",
       ],
     });
@@ -118,7 +138,7 @@ app.get("/home", async (req, res) => {
   }
 });
 
-// NEW: Signup route
+// Signup route
 app.post("/signup", async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -181,7 +201,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// NEW: Get all users route
+// Get all users route
 app.get("/users", async (req, res) => {
   try {
     // Get all users but exclude passwords from the response
@@ -218,6 +238,28 @@ app.post("/users", async (req, res) => {
   }
 });
 
+// =================== TASK ROUTES ===================
+
+// CREATE - Add a new task
+app.post("/tasks", taskController.createTask);
+
+// READ - Get all tasks (with optional filtering)
+app.get("/tasks", taskController.getTasks);
+
+// READ - Get a single task by ID
+app.get("/tasks/:id", taskController.getTaskById);
+
+// UPDATE - Update a task by ID
+app.put("/tasks/:id", taskController.updateTask);
+
+// DELETE - Delete a task by ID
+app.delete("/tasks/:id", taskController.deleteTask);
+
+// UTILITY - Get user's task statistics
+app.get("/tasks/stats/:userId", taskController.getTaskStats);
+
+// =================== UTILITY ROUTES ===================
+
 // Health check route
 app.get("/health", (req, res) => {
   res.json({
@@ -235,11 +277,20 @@ if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Available routes:`);
-    console.log(`- GET  /          - Welcome message`);
-    console.log(`- GET  /home      - Home page with recent users`);
-    console.log(`- POST /signup    - User signup`);
-    console.log(`- GET  /users     - Get all users`);
-    console.log(`- POST /users     - Create user (legacy)`);
-    console.log(`- GET  /health    - Health check`);
+    console.log(`\n=== USER ROUTES ===`);
+    console.log(`- GET  /              - Welcome message & API info`);
+    console.log(`- GET  /home          - Home page with recent users`);
+    console.log(`- POST /signup        - User signup`);
+    console.log(`- GET  /users         - Get all users`);
+    console.log(`- POST /users         - Create user (legacy)`);
+    console.log(`\n=== TASK ROUTES ===`);
+    console.log(`- POST   /tasks           - Create new task`);
+    console.log(`- GET    /tasks           - Get all tasks`);
+    console.log(`- GET    /tasks/:id       - Get task by ID`);
+    console.log(`- PUT    /tasks/:id       - Update task`);
+    console.log(`- DELETE /tasks/:id       - Delete task`);
+    console.log(`- GET    /tasks/stats/:userId - Get user task statistics`);
+    console.log(`\n=== UTILITY ROUTES ===`);
+    console.log(`- GET  /health        - Health check`);
   });
 }
