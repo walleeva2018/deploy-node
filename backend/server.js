@@ -3,10 +3,12 @@ require("dotenv").config();
 
 const connectDB = require("./config/database");
 const corsMiddleware = require("./middleware/cors");
+const errorHandler = require("./middleware/errorHandler");
 
 
 const userRoutes = require("./routes/userRoutes");
 const taskRoutes = require("./routes/taskRoutes");
+const personRoutes = require("./routes/personRoutes");
 
 const { logRoutes } = require("./utils/logger");
 
@@ -20,6 +22,7 @@ connectDB();
 
 app.use("/", userRoutes);
 app.use("/", taskRoutes);
+app.use("/", personRoutes);
 
 app.get("/health", (req, res) => {
   res.json({
@@ -28,6 +31,9 @@ app.get("/health", (req, res) => {
     uptime: process.uptime(),
   });
 });
+
+// Error handler middleware (must be last)
+app.use(errorHandler);
 
 module.exports = app;
 
