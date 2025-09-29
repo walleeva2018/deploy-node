@@ -8,6 +8,7 @@ A RESTful API built with Node.js, Express, and MongoDB for managing person recor
 - MongoDB integration with Mongoose
 - CORS enabled for trusted origins
 - Centralized error handling
+- Request logging using morgan
 - Environment-based configuration
 - Vercel deployment ready
 
@@ -74,21 +75,14 @@ npm run dev
 ├── config/
 │   └── database.js         # MongoDB connection
 ├── controllers/
-│   ├── personController.js # Person business logic
-│   ├── taskController.js   # Task business logic
-│   └── userController.js   # User business logic
+│   └── personController.js # Person business logic
 ├── middleware/
 │   ├── cors.js            # CORS configuration
 │   └── errorHandler.js    # Centralized error handling
 ├── models/
-│   ├── Person.js          # Person schema
-│   └── User.js            # User schema
+│   └── Person.js          # Person schema
 ├── routes/
-│   ├── personRoutes.js    # Person endpoints
-│   ├── taskRoutes.js      # Task endpoints
-│   └── userRoutes.js      # User endpoints
-├── utils/
-│   └── logger.js          # Logging utilities
+│   └── personRoutes.js    # Person endpoints
 ├── .env.example           # Environment variables template
 ├── server.js              # Main server file
 └── vercel.json           # Vercel config
@@ -114,6 +108,7 @@ docker run -d -p 27017:27017 mongo:latest
 3. **Set environment variables:**
    - `MONGODB_URI`
    - `NODE_ENV=production`
+   - `FRONTEND_URL` (your deployed frontend URL)
 4. **Deploy!**
 
 ## Testing
