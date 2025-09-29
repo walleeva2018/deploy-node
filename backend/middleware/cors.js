@@ -9,7 +9,7 @@ const corsOptions = {
       'http://localhost:3000',
       'http://localhost:5173',
       'http://localhost:4173',
-      'https://your-frontend-domain.vercel.app', // Replace with actual Vercel domain
+      'https://deploy-node-f6z2.vercel.app',
       process.env.FRONTEND_URL
     ].filter(Boolean);
 
