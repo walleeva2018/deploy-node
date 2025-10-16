@@ -30,6 +30,14 @@ const personSchema = new mongoose.Schema({
     zipCode: String,
     country: String,
   },
+  religion: {
+    type: String,
+    trim: true,
+  },
+  caste: {
+    type: String,
+    trim: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -1,6 +1,97 @@
 const Person = require("../models/Person");
+const { getCastesByReligion, getAllReligions } = require("../data/religionCasteData");
 
 const personController = {
+  // Get all religions
+  getAllReligions: async (req, res) => {
+    try {
+      const religions = getAllReligions();
+      res.status(200).json({
+        success: true,
+        data: religions
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error fetching religions",
+        error: error.message
+      });
+    }
+  },
+
+  // Get castes by religion
+  getCastesByReligion: async (req, res) => {
+    try {
+      const { religion } = req.params;
+
+      if (!religion) {
+        return res.status(400).json({
+          success: false,
+          message: "Religion parameter is required"
+        });
+      }
+
+      const castes = getCastesByReligion(religion);
+
+      if (castes.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Religion not found"
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        data: castes
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error fetching castes",
+        error: error.message
+      });
+    }
+  },
+
+  // Get persons by religion and/or caste
+  getPersonsByReligionCaste: async (req, res) => {
+    try {
+      const { religion, caste } = req.query;
+
+      // Build filter object dynamically
+      const filter = {};
+      if (religion) {
+        filter.religion = religion;
+      }
+      if (caste) {
+        filter.caste = caste;
+      }
+
+      // If no filters provided, return error
+      if (Object.keys(filter).length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide at least one filter parameter (religion or caste)"
+        });
+      }
+
+      const persons = await Person.find(filter).sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        data: persons,
+        count: persons.length,
+        filter: filter
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error fetching persons by filter",
+        error: error.message
+      });
+    }
+  },
+
   // Get all persons
   getAllPersons: async (req, res) => {
     try {
@@ -47,7 +138,7 @@ const personController = {
   // Create new person
   createPerson: async (req, res) => {
     try {
-      const { firstName, lastName, email, phone, address } = req.body;
+      const { firstName, lastName, email, phone, address, religion, caste } = req.body;
 
       // Check if person with email already exists
       const existingPerson = await Person.findOne({ email });
@@ -63,7 +154,9 @@ const personController = {
         lastName,
         email,
         phone,
-        address
+        address,
+        religion,
+        caste
       });
 
       const savedPerson = await person.save();
@@ -85,7 +178,7 @@ const personController = {
   // Update person
   updatePerson: async (req, res) => {
     try {
-      const { firstName, lastName, email, phone, address } = req.body;
+      const { firstName, lastName, email, phone, address, religion, caste } = req.body;
 
       // Check if email is being changed and if it already exists
       if (email) {
@@ -109,6 +202,8 @@ const personController = {
           email,
           phone,
           address,
+          religion,
+          caste,
           updatedAt: Date.now()
         },
         { new: true, runValidators: true }
