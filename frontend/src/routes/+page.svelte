@@ -4,6 +4,7 @@
 	import { addToast } from '$lib/stores/toast';
 	import PersonCard from '$lib/components/PersonCard.svelte';
 	import PersonForm from '$lib/components/PersonForm.svelte';
+	import PersonFilter from '$lib/components/PersonFilter.svelte';
 
 	let persons: Person[] = [];
 	let loading = true;
@@ -11,6 +12,9 @@
 	let showCreateForm = false;
 	let creating = false;
 	let searchQuery = '';
+	let filterReligion = '';
+	let filterCaste = '';
+	let isFiltered = false;
 
 	$: filteredPersons = persons.filter(person => {
 		if (!searchQuery.trim()) return true;
@@ -34,12 +38,44 @@
 			loading = true;
 			error = '';
 			persons = await PersonAPI.getAll();
+			isFiltered = false;
 		} catch (err) {
 			error = 'Failed to load persons. Please check your internet connection or try again later';
 			addToast('Failed to load persons', 'error');
 		} finally {
 			loading = false;
 		}
+	}
+
+	async function handleFilter(event: CustomEvent<{ religion: string; caste: string }>) {
+		const { religion, caste } = event.detail;
+
+		if (!religion && !caste) {
+			await loadPersons();
+			return;
+		}
+
+		try {
+			loading = true;
+			error = '';
+			filterReligion = religion;
+			filterCaste = caste;
+			persons = await PersonAPI.filterByReligionCaste(religion, caste);
+			isFiltered = true;
+			addToast(`Found ${persons.length} person(s)`, 'info');
+		} catch (err) {
+			error = 'Failed to filter persons';
+			addToast('Failed to filter persons', 'error');
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function handleClearFilter() {
+		filterReligion = '';
+		filterCaste = '';
+		searchQuery = '';
+		await loadPersons();
 	}
 
 	async function handleDelete(id: string) {
@@ -124,6 +160,15 @@
 		</div>
 	{/if}
 
+	{#if !loading && !showCreateForm}
+		<PersonFilter
+			bind:filterReligion
+			bind:filterCaste
+			on:filter={handleFilter}
+			on:clear={handleClearFilter}
+		/>
+	{/if}
+
 	{#if !loading && !showCreateForm && persons.length > 0}
 		<div class="bg-white rounded-lg shadow-sm p-4">
 			<div class="flex items-center space-x-3">
@@ -194,6 +239,43 @@
 				>
 					Add Person
 				</a>
+			</div>
+		</div>
+	{:else if persons.length === 0 && isFiltered}
+		<div class="text-center py-12">
+			<svg
+				class="mx-auto h-12 w-12 text-gray-400"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+				/>
+			</svg>
+			<h3 class="mt-2 text-lg font-medium text-gray-900">No persons found with this filter</h3>
+			<p class="mt-1 text-gray-500">
+				No persons match {filterReligion}{filterReligion && filterCaste ? ' - ' : ''}{filterCaste}.
+			</p>
+			<p class="mt-2 text-sm text-gray-600">
+				Try adding religion/caste information to existing persons or create new persons with these details.
+			</p>
+			<div class="mt-6 flex gap-3 justify-center">
+				<button
+					on:click={handleClearFilter}
+					class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+				>
+					Clear Filter
+				</button>
+				<button
+					on:click={toggleCreateForm}
+					class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+				>
+					Add New Person
+				</button>
 			</div>
 		</div>
 	{:else if filteredPersons.length === 0 && searchQuery}

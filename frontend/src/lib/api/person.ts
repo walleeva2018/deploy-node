@@ -11,6 +11,8 @@ export interface Person {
 		zipCode?: string;
 		country?: string;
 	};
+	religion?: string;
+	caste?: string;
 	createdAt?: string;
 	updatedAt?: string;
 }
@@ -25,6 +27,8 @@ export interface PersonFormData {
 	state?: string;
 	zipCode?: string;
 	country?: string;
+	religion?: string;
+	caste?: string;
 }
 
 const API_BASE_URL = 'https://deploy-node-omega.vercel.app/api';
@@ -71,7 +75,9 @@ export class PersonAPI {
 					state: person.state || '',
 					zipCode: person.zipCode || '',
 					country: person.country || ''
-				}
+				},
+				religion: person.religion || '',
+				caste: person.caste || ''
 			};
 
 			const response = await fetch(`${API_BASE_URL}/persons`, {
@@ -122,6 +128,27 @@ export class PersonAPI {
 			}
 		} catch (error) {
 			console.error('Error deleting person:', error);
+			throw error;
+		}
+	}
+
+	static async filterByReligionCaste(religion?: string, caste?: string): Promise<Person[]> {
+		try {
+			// Get all persons first
+			const allPersons = await this.getAll();
+
+			// Filter client-side to avoid route conflict with /api/persons/:id
+			return allPersons.filter(person => {
+				if (religion && person.religion !== religion) {
+					return false;
+				}
+				if (caste && person.caste !== caste) {
+					return false;
+				}
+				return true;
+			});
+		} catch (error) {
+			console.error('Error filtering persons:', error);
 			throw error;
 		}
 	}

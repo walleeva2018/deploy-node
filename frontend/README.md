@@ -62,7 +62,7 @@ src/
 
 The frontend communicates with a Node.js backend through a clean API layer:
 
-- **Base URL**: `https://deploy-node-omega.vercel.app/api`
+- **Base URL**: `http://localthost:3000/api`
 - **Endpoints**: RESTful API for person management
 - **Error Handling**: Comprehensive error handling with user-friendly messages
 

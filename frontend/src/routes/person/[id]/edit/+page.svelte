@@ -50,7 +50,9 @@
 					state: formData.state || '',
 					zipCode: formData.zipCode || '',
 					country: formData.country || ''
-				}
+				},
+				religion: formData.religion || '',
+				caste: formData.caste || ''
 			};
 			await PersonAPI.update(person._id, updatedPerson);
 			addToast('Person updated successfully', 'success');

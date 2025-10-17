@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import type { Person, PersonFormData } from '$lib/api/person';
+	import ReligionCaste from './ReligionCaste.svelte';
 
 	export let person: Person | null = null;
 	export let submitLabel = 'Submit';
@@ -20,7 +21,9 @@
 		city: person?.address?.city || '',
 		state: person?.address?.state || '',
 		zipCode: person?.address?.zipCode || '',
-		country: person?.address?.country || ''
+		country: person?.address?.country || '',
+		religion: person?.religion || '',
+		caste: person?.caste || ''
 	};
 
 	let errors: Record<string, string> = {};
@@ -65,7 +68,9 @@
 			city: formData.city.trim() || undefined,
 			state: formData.state.trim() || undefined,
 			zipCode: formData.zipCode.trim() || undefined,
-			country: formData.country.trim() || undefined
+			country: formData.country.trim() || undefined,
+			religion: formData.religion.trim() || undefined,
+			caste: formData.caste.trim() || undefined
 		});
 	}
 
@@ -159,6 +164,17 @@
 		{#if errors.phone}
 			<p class="mt-1 text-sm text-red-600">{errors.phone}</p>
 		{/if}
+	</div>
+
+	<div class="border-t pt-4">
+		<h4 class="text-sm font-medium text-gray-700 mb-4">Religion & Caste (Optional)</h4>
+		<ReligionCaste
+			bind:selectedReligion={formData.religion}
+			bind:selectedCaste={formData.caste}
+			religionError={errors.religion || ''}
+			casteError={errors.caste || ''}
+			disabled={loading}
+		/>
 	</div>
 
 	<div class="border-t pt-4">
