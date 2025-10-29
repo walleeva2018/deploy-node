@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from 'svelte';
-  import { religionCasteStore, getCastesForReligion } from '$lib/stores/religionCasteStore';
+  import { createEventDispatcher } from 'svelte';
+  import type { ReligionCasteMapping } from '$lib/api/religion';
 
   export let filterReligion: string = '';
   export let filterCaste: string = '';
+  export let religionCasteData: ReligionCasteMapping[] = [];
 
   const dispatch = createEventDispatcher<{
     filter: { religion: string; caste: string };
@@ -12,19 +13,11 @@
 
   let availableCastes: string[] = [];
 
-  // Load religion-caste data on mount
-  onMount(async () => {
-    try {
-      await religionCasteStore.fetchData();
-    } catch (error) {
-      console.error('Failed to load religion-caste data:', error);
-    }
-  });
-
   // Update available castes when religion changes
   $: {
-    if (filterReligion && $religionCasteStore.data.length > 0) {
-      availableCastes = getCastesForReligion(filterReligion, $religionCasteStore.data);
+    if (filterReligion && religionCasteData.length > 0) {
+      const mapping = religionCasteData.find(item => item.religion === filterReligion);
+      availableCastes = mapping ? mapping.castes : [];
     } else {
       availableCastes = [];
       filterCaste = '';
@@ -73,10 +66,9 @@
         bind:value={filterReligion}
         on:change={handleReligionChange}
         class="form-select"
-        disabled={$religionCasteStore.loading}
       >
         <option value="">All Religions</option>
-        {#each $religionCasteStore.data.map(item => item.religion) as religion}
+        {#each religionCasteData.map(item => item.religion) as religion}
           <option value={religion}>{religion}</option>
         {/each}
       </select>

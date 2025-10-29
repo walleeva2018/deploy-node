@@ -5,6 +5,9 @@
 	import PersonCard from '$lib/components/PersonCard.svelte';
 	import PersonForm from '$lib/components/PersonForm.svelte';
 	import PersonFilter from '$lib/components/PersonFilter.svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	let persons: Person[] = [];
 	let loading = true;
@@ -154,6 +157,7 @@
 						on:submit={handleCreate}
 						on:cancel={handleCancelCreate}
 						submitLabel="Create Person"
+						religionCasteData={data.religionCasteData}
 					/>
 				</div>
 			</div>
@@ -164,6 +168,7 @@
 		<PersonFilter
 			bind:filterReligion
 			bind:filterCaste
+			religionCasteData={data.religionCasteData}
 			on:filter={handleFilter}
 			on:clear={handleClearFilter}
 		/>

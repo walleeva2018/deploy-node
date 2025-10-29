@@ -85,11 +85,19 @@
 	{:else if person}
 		<div class="bg-white shadow-sm rounded-lg p-8">
 			<div class="flex items-center space-x-4 mb-8">
-				<div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-					<span class="text-blue-600 font-bold text-2xl">
-						{person.firstName.charAt(0).toUpperCase()}
-					</span>
-				</div>
+				{#if person.image}
+					<img
+						src={person.image}
+						alt="{person.firstName} {person.lastName}"
+						class="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+					/>
+				{:else}
+					<div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+						<span class="text-blue-600 font-bold text-2xl">
+							{person.firstName.charAt(0).toUpperCase()}
+						</span>
+					</div>
+				{/if}
 				<div>
 					<h2 class="text-2xl font-bold text-gray-900">{person.firstName} {person.lastName}</h2>
 					<p class="text-gray-600">{person.phone}</p>

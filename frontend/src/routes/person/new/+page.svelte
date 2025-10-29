@@ -3,6 +3,9 @@
 	import { PersonAPI, type PersonFormData } from '$lib/api/person';
 	import { addToast } from '$lib/stores/toast';
 	import PersonForm from '$lib/components/PersonForm.svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	async function handleSubmit(event: CustomEvent<PersonFormData>) {
 		const formData = event.detail;
@@ -36,6 +39,7 @@
 			on:submit={handleSubmit}
 			on:cancel={handleCancel}
 			submitLabel="Create Person"
+			religionCasteData={data.religionCasteData}
 		/>
 	</div>
 </div>

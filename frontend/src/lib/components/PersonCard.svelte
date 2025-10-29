@@ -17,11 +17,19 @@
 	<div class="p-6">
 		<div class="flex items-center justify-between mb-4">
 			<div class="flex items-center space-x-3">
-				<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-					<span class="text-blue-600 font-medium text-lg">
-						{person.firstName.charAt(0).toUpperCase()}
-					</span>
-				</div>
+				{#if person.image}
+					<img
+						src={person.image}
+						alt="{person.firstName} {person.lastName}"
+						class="w-10 h-10 rounded-full object-cover border border-gray-200"
+					/>
+				{:else}
+					<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+						<span class="text-blue-600 font-medium text-lg">
+							{person.firstName.charAt(0).toUpperCase()}
+						</span>
+					</div>
+				{/if}
 				<div>
 					<h3 class="text-lg font-medium text-gray-900">{person.firstName} {person.lastName}</h3>
 					<p class="text-sm text-gray-500">{person.phone}</p>

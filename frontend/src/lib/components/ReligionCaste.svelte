@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from 'svelte';
-  import { religionCasteStore, getCastesForReligion } from '$lib/stores/religionCasteStore';
+  import { createEventDispatcher } from 'svelte';
+  import type { ReligionCasteMapping } from '$lib/api/religion';
 
   export let selectedReligion: string = '';
   export let selectedCaste: string = '';
   export let religionError: string = '';
   export let casteError: string = '';
   export let disabled: boolean = false;
+  export let religionCasteData: ReligionCasteMapping[] = [];
 
   const dispatch = createEventDispatcher<{
     religionChange: string;
@@ -15,19 +16,11 @@
 
   let availableCastes: string[] = [];
 
-  // Load religion-caste data on mount
-  onMount(async () => {
-    try {
-      await religionCasteStore.fetchData();
-    } catch (error) {
-      console.error('Failed to load religion-caste data:', error);
-    }
-  });
-
   // Update available castes when religion changes
   $: {
-    if (selectedReligion && $religionCasteStore.data.length > 0) {
-      availableCastes = getCastesForReligion(selectedReligion, $religionCasteStore.data);
+    if (selectedReligion && religionCasteData.length > 0) {
+      const mapping = religionCasteData.find(item => item.religion === selectedReligion);
+      availableCastes = mapping ? mapping.castes : [];
       // Reset caste if it's not valid for the new religion
       if (selectedCaste && !availableCastes.includes(selectedCaste)) {
         selectedCaste = '';
@@ -66,20 +59,15 @@
       on:change={handleReligionChange}
       class="form-select"
       class:error={religionError}
-      disabled={disabled || $religionCasteStore.loading}
+      {disabled}
     >
-      <option value="">
-        {$religionCasteStore.loading ? 'Loading...' : 'Select a Religion'}
-      </option>
-      {#each $religionCasteStore.data.map(item => item.religion) as religion}
+      <option value="">Select a Religion</option>
+      {#each religionCasteData.map(item => item.religion) as religion}
         <option value={religion}>{religion}</option>
       {/each}
     </select>
     {#if religionError}
       <p class="error-message">{religionError}</p>
-    {/if}
-    {#if $religionCasteStore.error}
-      <p class="error-message">{$religionCasteStore.error}</p>
     {/if}
   </div>
 

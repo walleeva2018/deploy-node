@@ -5,6 +5,9 @@
 	import { PersonAPI, type Person, type PersonFormData } from '$lib/api/person';
 	import { addToast } from '$lib/stores/toast';
 	import PersonForm from '$lib/components/PersonForm.svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	let person: Person | null = null;
 	let loading = true;
@@ -52,7 +55,8 @@
 					country: formData.country || ''
 				},
 				religion: formData.religion || '',
-				caste: formData.caste || ''
+				caste: formData.caste || '',
+				image: formData.image || ''
 			};
 			await PersonAPI.update(person._id, updatedPerson);
 			addToast('Person updated successfully', 'success');
@@ -120,6 +124,7 @@
 				on:submit={handleSubmit}
 				on:cancel={handleCancel}
 				submitLabel="Update Person"
+				religionCasteData={data.religionCasteData}
 			/>
 		</div>
 	{:else}

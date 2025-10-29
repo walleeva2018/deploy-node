@@ -1,0 +1,1 @@
+import{w as i}from"./DNupYTse.js";const e=i([]);let d=0;function p(a,o="info",t=4e3){const s=String(++d),n={id:s,type:o,message:a,timeout:t};return e.update(r=>[n,...r]),t&&setTimeout(()=>f(s),t),s}function f(a){e.update(o=>o.filter(t=>t.id!==a))}export{p as a,f as r,e as t};

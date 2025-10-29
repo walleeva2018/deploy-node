@@ -13,6 +13,7 @@ export interface Person {
 	};
 	religion?: string;
 	caste?: string;
+	image?: string; // Base64 encoded image or URL
 	createdAt?: string;
 	updatedAt?: string;
 }
@@ -29,6 +30,7 @@ export interface PersonFormData {
 	country?: string;
 	religion?: string;
 	caste?: string;
+	image?: string; // Base64 encoded image
 }
 
 const API_BASE_URL = 'https://deploy-node-omega.vercel.app/api';
@@ -77,7 +79,8 @@ export class PersonAPI {
 					country: person.country || ''
 				},
 				religion: person.religion || '',
-				caste: person.caste || ''
+				caste: person.caste || '',
+				image: person.image || ''
 			};
 
 			const response = await fetch(`${API_BASE_URL}/persons`, {

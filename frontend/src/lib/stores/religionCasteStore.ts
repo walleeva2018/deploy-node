@@ -1,7 +1,18 @@
 import { writable, derived } from 'svelte/store';
 import type { ReligionCasteMapping } from '$lib/data/religionCasteData';
 
-const API_BASE_URL = 'https://deploy-node-omega.vercel.app/api';
+const API_BASE_URL = 'https://chunia.com:5000';
+
+interface Religion {
+  _id: string;
+  name: string;
+}
+
+interface Caste {
+  _id: string;
+  name: string;
+  religionId: string;
+}
 
 interface ReligionCasteState {
   data: ReligionCasteMapping[];
@@ -36,24 +47,32 @@ function createReligionCasteStore() {
       set({ data: [], loading: true, error: null, loaded: false });
 
       try {
-        const response = await fetch(`${API_BASE_URL}/religions`);
+        // Fetch all religions from new API endpoint
+        const response = await fetch(`${API_BASE_URL}/religion`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const result = await response.json();
-        const religions = result.data || result;
+        const religions: Religion[] = await response.json();
 
         // Fetch castes for each religion in parallel
-        const dataPromises = religions.map(async (religion: string) => {
-          const casteResponse = await fetch(`${API_BASE_URL}/religions/${encodeURIComponent(religion)}/castes`);
-          const casteResult = await casteResponse.json();
-          const castes = casteResult.data || casteResult;
+        const dataPromises = religions.map(async (religion: Religion) => {
+          const casteResponse = await fetch(`${API_BASE_URL}/caste/${religion._id}`);
+
+          if (!casteResponse.ok) {
+            console.warn(`Failed to fetch castes for religion ${religion.name}`);
+            return {
+              religion: religion.name,
+              castes: []
+            };
+          }
+
+          const castes: Caste[] = await casteResponse.json();
 
           return {
-            religion,
-            castes
+            religion: religion.name,
+            castes: castes.map((caste: Caste) => caste.name)
           };
         });
 

@@ -1,6 +1,15 @@
 {
-	"/": [],
-	"/person/new": [],
+	"/": [
+		"src/routes/+page.server.ts"
+	],
+	"/api/upload-image": [
+		"src/routes/api/upload-image/+server.ts"
+	],
+	"/person/new": [
+		"src/routes/person/new/+page.server.ts"
+	],
 	"/person/[id]": [],
-	"/person/[id]/edit": []
+	"/person/[id]/edit": [
+		"src/routes/person/[id]/edit/+page.server.ts"
+	]
 }

@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import type { Person, PersonFormData } from '$lib/api/person';
+	import type { ReligionCasteMapping } from '$lib/api/religion';
 	import ReligionCaste from './ReligionCaste.svelte';
+	import ImageUpload from './ImageUpload.svelte';
 
 	export let person: Person | null = null;
 	export let submitLabel = 'Submit';
 	export let loading = false;
+	export let religionCasteData: ReligionCasteMapping[] = [];
 
 	const dispatch = createEventDispatcher<{
 		submit: PersonFormData;
@@ -23,7 +26,8 @@
 		zipCode: person?.address?.zipCode || '',
 		country: person?.address?.country || '',
 		religion: person?.religion || '',
-		caste: person?.caste || ''
+		caste: person?.caste || '',
+		image: person?.image || ''
 	};
 
 	let errors: Record<string, string> = {};
@@ -70,7 +74,8 @@
 			zipCode: formData.zipCode.trim() || undefined,
 			country: formData.country.trim() || undefined,
 			religion: formData.religion.trim() || undefined,
-			caste: formData.caste.trim() || undefined
+			caste: formData.caste.trim() || undefined,
+			image: formData.image || undefined
 		});
 	}
 
@@ -80,6 +85,15 @@
 </script>
 
 <form on:submit={handleSubmit} class="space-y-6 w-full">
+	<!-- Profile Image Upload -->
+	<div class="border-b pb-6">
+		<ImageUpload
+			currentImage={formData.image}
+			disabled={loading}
+			on:imageChange={(e) => formData.image = e.detail}
+		/>
+	</div>
+
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		<div>
 			<label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
@@ -174,6 +188,7 @@
 			religionError={errors.religion || ''}
 			casteError={errors.caste || ''}
 			disabled={loading}
+			{religionCasteData}
 		/>
 	</div>
 
