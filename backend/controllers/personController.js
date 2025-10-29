@@ -1,5 +1,6 @@
 const Person = require("../models/Person");
 const { getCastesByReligion, getAllReligions } = require("../data/religionCasteData");
+const { processImage } = require("../utils/imageProcessor");
 
 const personController = {
   // Get all religions
@@ -138,7 +139,7 @@ const personController = {
   // Create new person
   createPerson: async (req, res) => {
     try {
-      const { firstName, lastName, email, phone, address, religion, caste } = req.body;
+      const { firstName, lastName, email, phone, address, religion, caste, image } = req.body;
 
       // Check if person with email already exists
       const existingPerson = await Person.findOne({ email });
@@ -149,6 +150,20 @@ const personController = {
         });
       }
 
+      // Process image if provided
+      let processedImage = null;
+      if (image) {
+        try {
+          processedImage = await processImage(image);
+        } catch (imageError) {
+          return res.status(400).json({
+            success: false,
+            message: "Error processing image",
+            error: imageError.message
+          });
+        }
+      }
+
       const person = new Person({
         firstName,
         lastName,
@@ -156,7 +171,8 @@ const personController = {
         phone,
         address,
         religion,
-        caste
+        caste,
+        image: processedImage
       });
 
       const savedPerson = await person.save();
@@ -178,7 +194,7 @@ const personController = {
   // Update person
   updatePerson: async (req, res) => {
     try {
-      const { firstName, lastName, email, phone, address, religion, caste } = req.body;
+      const { firstName, lastName, email, phone, address, religion, caste, image } = req.body;
 
       // Check if email is being changed and if it already exists
       if (email) {
@@ -194,18 +210,45 @@ const personController = {
         }
       }
 
+      // Process image if provided
+      let processedImage = undefined; // Use undefined to not update if not provided
+      if (image !== undefined) {
+        if (image) {
+          try {
+            processedImage = await processImage(image);
+          } catch (imageError) {
+            return res.status(400).json({
+              success: false,
+              message: "Error processing image",
+              error: imageError.message
+            });
+          }
+        } else {
+          // If image is explicitly null or empty string, clear it
+          processedImage = null;
+        }
+      }
+
+      // Build update object
+      const updateData = {
+        firstName,
+        lastName,
+        email,
+        phone,
+        address,
+        religion,
+        caste,
+        updatedAt: Date.now()
+      };
+
+      // Only update image if it was provided in the request
+      if (processedImage !== undefined) {
+        updateData.image = processedImage;
+      }
+
       const person = await Person.findByIdAndUpdate(
         req.params.id,
-        {
-          firstName,
-          lastName,
-          email,
-          phone,
-          address,
-          religion,
-          caste,
-          updatedAt: Date.now()
-        },
+        updateData,
         { new: true, runValidators: true }
       );
 
